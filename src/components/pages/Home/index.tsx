@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import colors from '../../../utils/colors';
 import {
@@ -11,10 +11,38 @@ import {
 } from '../../atoms';
 import { Wrapper, Screen, Content, PageHeader } from '../../container';
 
+interface ItemTypes {
+  id: number;
+  title: string;
+  link: string;
+}
+
 const Home = () => {
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     document.title = 'My Link';
   }, []);
+
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (isLoading) {
+      const links = JSON.parse(localStorage.getItem('mylinks')!);
+      if (links) {
+        setData(links);
+      }
+    }
+    return () => {
+      setIsLoading(false);
+    };
+  }, [data, isLoading]);
+
+  const handleDelete = (e: number) => {
+    const filteredData = data.filter((data: ItemTypes) => data.id !== e);
+    setData(filteredData);
+    localStorage.setItem('mylinks', JSON.stringify(filteredData));
+  };
+
   const history = useHistory();
   return (
     <div>
@@ -24,7 +52,7 @@ const Home = () => {
             <Button
               width="40px"
               height="40px"
-              color="#2274a5"
+              color={colors.blue[300]}
               boxShadow="0 0 20px rgba(0, 0, 0, 0.1)"
               onClick={() => history.push('/add')}>
               <i className="bi bi-plus-lg"></i>
@@ -34,29 +62,30 @@ const Home = () => {
             </Text>
           </PageHeader>
           <Content>
-            {[1, 3, 4, 5, 6, 7, 8, 9, 0, 1, 11, 2, 2, 4, 5].map((item) => {
+            {data.map((item: ItemTypes) => {
               return (
                 <>
-                  <LinkItem key={item}>
-                    <Text fontWeight="600">My Website</Text>
+                  <LinkItem key={item.id}>
+                    <Text fontWeight="600">{item.title}</Text>
                     <Text fontWeight="300" fontSize="0.9em">
-                      https://estotriramdani.github.io
+                      {item.link}
                     </Text>
                     <Gap height={8} />
                     <ButtonGroupWrapper>
                       <Button
                         width="30px"
                         height="30px"
-                        color={colors.red[100]}>
+                        color={colors.red[300]}
+                        onClick={() => handleDelete(item.id)}>
                         <i
                           className="bi bi-trash"
                           style={{ fontSize: '0.9em' }}></i>
                       </Button>
-                      <a
-                        href="https://esto.com"
-                        target="_blank"
-                        rel="noreferrer">
-                        <Button width="30px" height="30px" color="#059E54">
+                      <a href={item.link} target="_blank" rel="noreferrer">
+                        <Button
+                          width="30px"
+                          height="30px"
+                          color={colors.green[100]}>
                           <i
                             className="bi bi-eye"
                             style={{ fontSize: '0.9em' }}></i>
@@ -68,6 +97,16 @@ const Home = () => {
                 </>
               );
             })}
+            {data.length === 0 ? (
+              <LinkItem>
+                <Text fontWeight="600">No links</Text>
+                <Text fontWeight="300" fontSize="0.9em">
+                  Go add some!
+                </Text>
+              </LinkItem>
+            ) : (
+              ''
+            )}
             <Gap height={40} />
           </Content>
           <FloatingButtonWrapper>
@@ -77,7 +116,7 @@ const Home = () => {
               height="50px"
               boxShadow="0 0 20px rgba(0, 0, 0, 0.2)"
               color="white"
-              backgroundColor="#2274a5">
+              backgroundColor={colors.blue[300]}>
               Add Link
             </Button>
           </FloatingButtonWrapper>

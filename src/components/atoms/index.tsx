@@ -30,6 +30,31 @@ export const Button = styled.button`
   }
 `;
 
+export const ButtonGradient = styled.button`
+  padding: 8px;
+  background: linear-gradient(
+    to bottom,
+    ${colors.blue[300]},
+    ${colors.blue[200]}
+  );
+  color: ${(props: ButtonProps) => props.color || 'black'};
+  width: ${(props: ButtonProps) => props.width || '100%'};
+  height: ${(props: ButtonProps) => props.height || 'max-content'};
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  box-shadow: ${(props: ButtonProps) => props.boxShadow || 'none'};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  :hover {
+    color: ${(props: ButtonProps) => props.backgroundColor || 'white'};
+    background-color: ${(props: ButtonProps) => props.color || 'black'};
+  }
+`;
+
 export const ButtonGroupWrapper = styled.div`
   display: flex;
   gap: 7px;
@@ -61,14 +86,22 @@ export const LinkItem = styled.div`
   text-align: left;
   border: none;
   outline: none;
-  background: linear-gradient(to bottom left, #c7efcf, #96bcd9);
+  background: linear-gradient(
+    to bottom left,
+    ${colors.blue[100]},
+    ${colors.blue[200]}
+  );
   transition: background 0.3s !important;
   padding: 15px 20px;
   border-radius: 10px;
   font-size: 1em;
   color: ${colors.white};
   :hover {
-    background: linear-gradient(to left, #c7efcf, #96bcd9);
+    background: linear-gradient(
+      to left,
+      ${colors.blue[100]},
+      ${colors.blue[200]}
+    );
   }
 `;
 

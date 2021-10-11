@@ -32,7 +32,11 @@ export const Content = styled.div`
 `;
 
 export const PageHeader = styled.div`
-  background: linear-gradient(to bottom right, #2274a5 20%, #78bce3);
+  background: linear-gradient(
+    to bottom right,
+    ${colors.blue[300]} 20%,
+    ${colors.blue[200]}
+  );
   padding: 20px;
   display: flex;
   align-items: center;
